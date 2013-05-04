@@ -38,9 +38,31 @@ void puts(char* str) {
 	PUT32(0xff002000, '\n');
 }
 
-int notmain ( void )
+void hexstrings ( unsigned int d )
+{
+    //unsigned int ra;
+    unsigned int rb;
+    unsigned int rc;
+
+    rb=32;
+    while(1)
+    {
+        rb-=4;
+        rc=(d>>rb)&0xF;
+        if(rc>9) rc+=0x37; else rc+=0x30;
+        putc((char) rc);
+        if(rb==0) break;
+    }
+    putc((char) 0x20);
+    putc('\n');
+}
+
+int notmain (unsigned zero, unsigned type, unsigned tags)
 {
 	puts("Full yolo motion!");
+	hexstrings(GETPC());
+	puts("That was PC - now ARM machine type");
+	hexstrings(type);
 	while(1){}
 	return 0;
 }
