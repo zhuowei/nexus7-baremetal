@@ -2,7 +2,7 @@
 ARMGNU ?= arm-linux-gnueabihf
 #ARMGNU ?= arm-linux-androideabi
 
-COPS = -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a9 -std=gnu99 -marm -mthumb-interwork -fPIC
+COPS = -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a9 -std=gnu99 -marm -mthumb-interwork
 
 gcc : kernel.img
 

@@ -34,9 +34,8 @@ void drawRect(int beginX, int beginY, int width, int height, int color) {
 	}
 }
 
-int notmain ( void )
-{
-	drawRect(0, 0, WIDTH, HEIGHT, 0xff0000); //blue background
+void renderScreen(int color) {
+	drawRect(0, 0, WIDTH, HEIGHT, color << 16); //blue background
         drawRect(WIDTH - 400 - 10, 10, 400, 640, 0x00ff00);
 	drawRect(10, 10, 800 - 420 - 10, 315, 0x00ffff);
 	drawRect(10, 340, 800 - 420 - 10, 315, 0xffff00);
@@ -45,7 +44,14 @@ int notmain ( void )
 	drawRect(10, 10 + 640 + 10 + 310 + 10, 370, 310, 0x990011);
 	drawRect(10 + 370 + 10, 10 + 640 + 10 + 310 + 10, 190, 310, 0xaa0011);
 	drawRect(WIDTH - 205, 10 + 640 + 10 + 310 + 10, 195, 310, 0xaaaa11);
-	while(1){}
+}
+int notmain ( void )
+{
+	int color = 0;
+	while(1){
+		color = (color + 16) & 0xff;
+		renderScreen(color);
+	}
 	return 0;
 }
 
