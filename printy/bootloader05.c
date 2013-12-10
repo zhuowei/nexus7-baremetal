@@ -51,7 +51,7 @@ void drawRect(int beginX, int beginY, int width, int height, int color) {
 	for (int y = beginY; y < beginY + height; y++) {
 		for (int x = beginX; x < beginX + width; x++) {
 			int loc = VIDEOBASE + (((y * WIDTH) + x) * 4);
-			PUT32(loc, color);
+			*((int*) loc) = color;
 		}
 	}
 }
