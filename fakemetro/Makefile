@@ -1,7 +1,8 @@
 
-ARMGNU ?= arm-linux-androideabi
+ARMGNU ?= arm-linux-gnueabihf
+#ARMGNU ?= arm-linux-androideabi
 
-COPS = -Wall -O3 -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a9 -std=gnu99 -mthumb -mthumb-interwork
+COPS = -Wall -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a9 -std=gnu99 -marm -mthumb-interwork -fPIC
 
 gcc : kernel.img
 
@@ -26,7 +27,7 @@ bootloader05.o : bootloader05.c
 
 kernel.img : loader start.o bootloader05.o 
 	$(ARMGNU)-ld start.o bootloader05.o -T loader -o bootloader05.elf
-	$(ARMGNU)-objdump -D bootloader05.elf > bootloader05.list
+	#$(ARMGNU)-objdump -D bootloader05.elf > bootloader05.list
 	$(ARMGNU)-objcopy bootloader05.elf -O ihex bootloader05.hex
 	$(ARMGNU)-objcopy bootloader05.elf -O binary kernel.img
 

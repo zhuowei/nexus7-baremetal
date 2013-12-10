@@ -57,12 +57,17 @@ void hexstrings ( unsigned int d )
     putc('\n');
 }
 
+static char test1[] = {'t', 'e', 's', 't', '1', 0};
+char test2[] = {'t', 'e', 's', 't', '2', 0};
+
 int notmain (unsigned zero, unsigned type, unsigned tags)
 {
 	puts("Full yolo motion!");
 	hexstrings(GETPC());
 	puts("That was PC - now ARM machine type");
 	hexstrings(type);
+	puts(test1);
+	puts(test2);
 	while(1){}
 	return 0;
 }
