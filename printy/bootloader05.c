@@ -13,6 +13,10 @@
 #define WIDTH 800
 #define HEIGHT 1280
 
+#include "consolefont.c"
+
+#define FONT_WIDTH 8
+
 extern void PUT32 ( unsigned int, unsigned int );
 extern void PUT16 ( unsigned int, unsigned int );
 extern void PUT8 ( unsigned int, unsigned int );
@@ -25,60 +29,79 @@ extern void dummy ( unsigned int );
 //unsigned char xstring[256];
 //------------------------------------------------------------------------
 
-void putc(char a) {
-	PUT32(0xff002000, a);
-}
+const char* messages[] = {
+"We're no strangers to love",
+"You know the rules and so do I",
+"A full commitment's what I'm thinking of",
+"You wouldn't get this from any other guy",
+"I just wanna tell you how I'm feeling",
+"Gonna make you understand",
+"Never gonna give you up",
+"Never gonna let you down",
+"Never gonna run around and",
+"Desert you",
+"Never gonna make you cry",
+"Never gonna say goodbye",
+"Never gonna tell a lie",
+"And hurt you"};
 
-void puts(char* str) {
-	char nextChar;
-	while((nextChar = *str)) {
-		PUT32(0xff002000, nextChar);
-		str++;
+#define MESSAGES_COUNT 14
+
+void drawRect(int beginX, int beginY, int width, int height, int color) {
+	for (int y = beginY; y < beginY + height; y++) {
+		for (int x = beginX; x < beginX + width; x++) {
+			int loc = VIDEOBASE + (((y * WIDTH) + x) * 4);
+			PUT32(loc, color);
+		}
 	}
-	PUT32(0xff002000, '\n');
 }
 
-void hexstrings ( unsigned int d )
-{
-    //unsigned int ra;
-    unsigned int rb;
-    unsigned int rc;
-
-    rb=32;
-    while(1)
-    {
-        rb-=4;
-        rc=(d>>rb)&0xF;
-        if(rc>9) rc+=0x37; else rc+=0x30;
-        putc((char) rc);
-        if(rb==0) break;
-    }
-    putc((char) 0x20);
-    putc('\n');
+void setPixel(int x, int y, int color) {
+	int loc = VIDEOBASE + (((y * WIDTH) + x) * 4);
+	PUT32(loc, color);
 }
 
-static char test1[] = {'t', 'e', 's', 't', '1', 0};
-char test2[] = {'t', 'e', 's', 't', '2', 0};
+#define FONT_WIDTH 8
 
-const char test3[] = "test3";
+int drawCharacter(char mychar, int screenr, int screenc) {
+	int index = ((int) mychar) * FONT_WIDTH;
+	int rr, cc;
+	for (rr = 0; rr < FONT_WIDTH; rr++) {
+		int myrow = console_font[index + rr];
+		for (cc = 0; cc < FONT_WIDTH; cc++) {
+			int thisPixel = (myrow >> (FONT_WIDTH - 1 - cc)) & 0x1;
+			if (thisPixel) {
+				setPixel(screenc + cc, screenr + rr, 0xffffff);
+			}
+		}
+	}
+	return console_font_widths[(int) mychar] + 1;
+}
 
-int notmain (unsigned zero, unsigned type, unsigned tags)
+void drawString(char* myStr, int screenr, int screenc) {
+	char myChar;
+	while ((myChar = *(myStr++)) != 0) {
+		int width = drawCharacter(myChar, screenr, screenc);
+		screenc += width;
+	}
+}
+
+int notmain ( void )
 {
-	puts("Full yolo motion!");
-	hexstrings(GETPC());
-	puts("That was PC - now ARM machine type");
-	hexstrings(type);
-	puts(test1);
-	puts(test2);
-	puts(test3);
-	while(1){}
+	int col = 0;
+	drawRect(0, 0, WIDTH, HEIGHT, col); //black background
+	for (int i = 0; i < MESSAGES_COUNT; i++) {
+		drawString((char*) messages[i], i * (FONT_WIDTH + 1), 0);
+	}
+	while(1){
+	}
 	return 0;
 }
-
+//The font is derived from the Minecraft font. Please don't sue me.
 //-------------------------------------------------------------------------
 //-------------------------------------------------------------------------
 
-
+//Portions of this code pulled from the Raspberry Pi experiments by David Welch.
 //-------------------------------------------------------------------------
 //
 // Copyright (c) 2012 David Welch dwelch@dwelch.com
