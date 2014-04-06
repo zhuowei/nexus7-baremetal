@@ -2,7 +2,7 @@
 ARMGNU ?= arm-linux-gnueabi
 
 COPS = -Wall -O3 -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a9 -std=gnu99 -marm -mthumb-interwork
-OBJS = start.o bootloader05.o bzero.o
+OBJS = start.o bootloader05.o bzero.o mmuop.o
 LIBGCC = /usr/lib/gcc-cross/arm-linux-gnueabi/4.7/libgcc.a
 
 gcc : kernel.img

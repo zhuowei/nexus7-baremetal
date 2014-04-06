@@ -1,4 +1,5 @@
 // FracRotate.cpp : main project file.
+#include "hal.h"
 #define VIDEOBASE 0xabe01000
 #include "sintable.h"
 
@@ -13,6 +14,28 @@ void *memset(void *ptr, int c, unsigned int len);
 
 static unsigned int* framebuffer = (unsigned int*) VIDEOBASE;
 static unsigned int* secondFramebuffer = (unsigned int*) (VIDEOBASE + (WIDTH * HEIGHT * 4));
+
+#define MMU_SECTION 0x2
+#define MMU_BUFFERABLE (1 << 2)
+#define MMU_CACHEABLE (1 << 3)
+#define MMU_RESERVED1 (1 << 4)
+#define MMU_AP_ALL (0x3 << 10)
+
+static unsigned int* HalTTB = (void*) 0x80b00000;
+
+void HalSetupMemory() {
+	int perms = MMU_SECTION | MMU_BUFFERABLE | MMU_CACHEABLE | MMU_RESERVED1 | MMU_AP_ALL;
+	/* identity map the MMU */
+	for (unsigned int i = 0; i < 0x1000; i++) {
+		unsigned int ttbEntry = i << 20 | perms;
+		HalTTB[i] = ttbEntry;
+	}
+	HalSetMMUTTB(HalTTB);
+	HalSetMMUDomain();
+	HalEnableMMU();
+	HalEnableICache();
+	HalEnableDCache();
+}
 
 static float sindeg(int val) {
 	val = val % 360;
@@ -74,6 +97,7 @@ void flipBuffer() {
 }
 
 int notmain (int alwaysZero, int armMachineType, void *atags) {
+	HalSetupMemory();
 	int degrees = 0;
 	while(1) {
 		memset(framebuffer, 0xff, WIDTH * HEIGHT * 4);
