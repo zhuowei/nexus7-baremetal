@@ -33,6 +33,7 @@ void HalSetupMemory() {
 	HalSetMMUTTB(HalTTB);
 	HalSetMMUDomain();
 	HalEnableMMU();
+	HalEnableFlowPrediction();
 	HalEnableICache();
 	HalEnableDCache();
 }

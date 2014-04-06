@@ -24,6 +24,13 @@ HalEnableICache:
 	mcr p15, 0, r0, c1, c0, 0
 	bx lr
 
+.global HalEnableFlowPrediction
+HalEnableFlowPrediction:
+	mrc p15, 0, r0, c1, c0, 0
+	orr r0, #(1 << 11)
+	mcr p15, 0, r0, c1, c0, 0
+	bx lr 
+
 .global HalSetMMUDomain
 HalSetMMUDomain:
 	mov r0, #0x3
