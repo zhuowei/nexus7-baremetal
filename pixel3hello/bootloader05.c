@@ -26,8 +26,8 @@ int notmain (void *dtb) {
 		asm volatile("");
 	}
 	// simplest test code: just reboots the processo
-	//unsigned int* hold = (unsigned int*)MPM2_MPM_PS_HOLD;
-	//*hold = 0;
+	unsigned int* hold = (unsigned int*)MPM2_MPM_PS_HOLD;
+	*hold = 0;
 	while(1) {
 	}
 	return 0;
