@@ -1,7 +1,7 @@
 
 ARMGNU ?= aarch64-linux-gnu
 
-COPS = -Wall -O3 -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a53 -std=gnu99
+COPS = -Wall -Os -nostdlib -nostartfiles -ffreestanding -mcpu=cortex-a53 -std=gnu99
 OBJS = start.o bootloader05.o
 
 gcc : kernel.img bootable.img
