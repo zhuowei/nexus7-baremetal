@@ -9,7 +9,7 @@ static void* findframebuffer() {
 	// this gets the screen to blank out before rebooting.
 	// implying that scanout is still turned on after booting kernel
 	// unlike Nexus 6P.
-	for (unsigned int* p = (unsigned int*)0x9cb80000ull; p <= (unsigned int*)0x9d9fffffull; p++) {
+	for (unsigned int* p = (unsigned int*)0x9d900000ull; p <= (unsigned int*)0x9db00000ull; p++) {
 		*p = 0xff00ff00u;
 	}
 	return 0;
